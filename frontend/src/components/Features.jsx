@@ -96,7 +96,7 @@ function Features() {
             />
           </div>
           <Link to="./login">
-            <button className="bg-[#8942c7] rounded px-10 py-4 mt-6 font-bold hover:bg-[#b17bde] shadow-2xl shadow-[#d0b88aa5] ease-in-out duration-200">
+            <button className="bg-[#8942c7] rounded px-5 py-2   md:px-10   md:py-5 mt-6 font-bold hover:bg-[#b17bde] shadow-2xl shadow-[#d0b88aa5] ease-in-out duration-200">
               立即登入
             </button>
           </Link>
@@ -120,7 +120,7 @@ function Features() {
           }
           alt="/"
         />
-        <div className="flex flex-col justify-center  items-center  order-1 md:order-2 ml-10">
+        <div className="flex flex-col justify-center  items-center  order-1 md:order-2 ">
           <p className="text-[#e5c34a] font-bold ">表情符號</p>
           <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold py-2">
             傳達你的好心情
@@ -129,7 +129,7 @@ function Features() {
         </div>
       </div>{" "}
       <div className="max-w-[1240px] mx-auto grid md:grid-cols-2">
-        <div className="flex flex-col justify-center items-center  lg:ml-20 mr-10">
+        <div className="flex flex-col justify-center items-center  lg:ml-20 ">
           <p className="text-[#e5c34a] font-bold ">想聊就聊</p>
           <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold py-2">
             隨時隨地聊天
@@ -152,7 +152,7 @@ function Features() {
           }
           alt="/"
         />
-        <div className="flex flex-col justify-center items-center lg:ml-20 order-1 md:order-2 ml-10">
+        <div className="flex flex-col justify-center items-center lg:ml-20 order-1 md:order-2 ">
           <p className="text-[#e5c34a] font-bold ">影音</p>
           <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold py-2">
             分享你喜歡的影片與圖片

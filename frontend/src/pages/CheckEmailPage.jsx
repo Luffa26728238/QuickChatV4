@@ -39,7 +39,7 @@ function CheckEmailPage() {
   }
   return (
     <div className="text-white bg-gradient-to-r from-violet-500 to-fuchsia-500 h-[100vh] flex justify-center items-center ">
-      <div className="fixed top-10 left-10">
+      <div className="fixed top-0 left-0">
         <Link to="/">
           {" "}
           <img

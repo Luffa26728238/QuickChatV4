@@ -113,7 +113,7 @@ function RegisterPage() {
           <img
             src="https://cdn3.iconfinder.com/data/icons/essential-rounded/66/Rounded-40-512.png"
             alt=""
-            className="w-20 h-20"
+            className="fixed top-0 left-0 w-24"
           />
         </Link>
       </div>

@@ -13,9 +13,10 @@ import { FiUserPlus } from "react-icons/fi"
 import { SlLogout } from "react-icons/sl"
 import { BsImage } from "react-icons/bs"
 import { RxVideo } from "react-icons/rx"
+import { useAuthContext } from "../context/AuthContext"
 
 function Sidebar() {
-  const user = useSelector((state) => state?.user)
+  const { authUser } = useAuthContext()
   const socketConnection = useSelector((state) => state.user.socketConnection)
 
   const [allUser, setAllUser] = useState([])

@@ -5,14 +5,16 @@ import { Link, useNavigate } from "react-router-dom"
 import uploadFile from "../helpers/uploadFile"
 import axios from "axios"
 import toast from "react-hot-toast"
+import useSignUp from "../hooks/useSignUp"
 
-function RegisterPage() {
+function Register() {
   const [data, setData] = useState({
-    name: "",
+    fullName: "",
     email: "",
     password: "",
     profileImg: "",
   })
+  const { loading, signup } = useSignUp()
 
   const [photo, setPhoto] = useState("")
 
@@ -23,7 +25,6 @@ function RegisterPage() {
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value })
   }
-
   const handleUploadPhoto = (e) => {
     const file = e.target.files[0]
     if (!file) return
@@ -37,8 +38,9 @@ function RegisterPage() {
 
     const reader = new FileReader()
 
-    reader.onload = function (event) {
-      const imageUrl = event.target.result
+    reader.onload = (e) => {
+      // base64url
+      const imageUrl = e.target.result
 
       setImgFile(file)
       setData({
@@ -74,37 +76,15 @@ function RegisterPage() {
       }
 
       uploadPhoto = await uploadFile(imgFile)
-    }
 
-    const URL = `${import.meta.env.VITE_APP_BACKEND_API}/register`
-
-    try {
-      const res = await axios.post(URL, {
+      setData({
         ...data,
         profileImg: uploadPhoto.url,
       })
-
-      console.log(res)
-      toast.success(res.data.message)
-
-      if (res.data.success) {
-        setData({
-          name: "",
-          email: "",
-          password: "",
-          profileImg: "",
-        })
-        console.log("註冊成功")
-        navigate("/login")
-      }
-
-      console.log(res)
-    } catch (err) {
-      toast.error(err.response.data.message)
-      console.error(err)
     }
-  }
 
+    await signup(data)
+  }
   return (
     <div className="text-black bg-gradient-to-r from-violet-500 to-fuchsia-500 h-[100vh] flex justify-center items-center">
       <div className="fixed top-10 left-10">
@@ -128,10 +108,10 @@ function RegisterPage() {
               <input
                 type="text"
                 id="name"
-                name="name"
+                name="fullName"
                 placeholder="使用者名稱"
                 className=" px-2 py-2 rounded transition-all duration-500 focus:outline"
-                value={data.name}
+                value={data.fullName}
                 onChange={handleChange}
                 required
               />
@@ -216,4 +196,4 @@ function RegisterPage() {
   )
 }
 
-export default RegisterPage
+export default Register

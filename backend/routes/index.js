@@ -9,7 +9,7 @@ import searchUser from "../controller/searchUser.js"
 
 const router = express.Router()
 
-//建立user api
+//註冊新用戶
 router.post("/register", register)
 
 //檢查信箱
@@ -20,7 +20,6 @@ router.post("/password", checkPassword)
 
 //獲取用戶信息
 router.get("/user-detail", userDetail)
-export default router
 
 //更新用戶訊息
 router.post("/update-user", updateUser)
@@ -30,3 +29,4 @@ router.get("/logout", logout)
 
 //搜尋其他用戶
 router.post("/search-user", searchUser)
+export default router

@@ -19,7 +19,7 @@ const checkPassword = async (req, res) => {
       id: user._id,
       email: user.email,
     }
-    const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
+    const token = await jwt.sign(tokenData, process.env.JWT_SECRET, {
       expiresIn: "1d",
     })
 

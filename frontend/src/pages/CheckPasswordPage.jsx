@@ -3,25 +3,28 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import axios from "axios"
 import toast from "react-hot-toast"
 import Avatar from "../components/Avatar"
-import { useDispatch } from "react-redux"
-import { setToken, setUser } from "../redux/userSlice"
+// import { useDispatch } from "react-redux"
+// import { setToken, setUser } from "../redux/userSlice"
 
 function CheckPasswordPage() {
   const [userData, setUserData] = useState({
-    password: "",
     userId: "",
+    password: "",
   })
 
   const navigate = useNavigate()
-  const location = useLocation()
-  const dispatch = useDispatch()
+  const location = useLocation() //其他地方使用用 navigate("./password",{ data: }) 後面傳遞的參數可以用location.data獲取:)
+
+  console.log(location)
+  return
+  // const dispatch = useDispatch()
 
   // 把個人訊息解構出來
   const { _id: userId, email, name, profileImg } = location.state || {}
 
   useEffect(() => {
     if (!name) {
-      navigate("/login")
+      navigate("/checkEmail")
     } else {
       setUserData((prevData) => ({
         ...prevData,

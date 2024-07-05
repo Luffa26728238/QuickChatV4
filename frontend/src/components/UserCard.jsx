@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import Avatar from "./Avatar"
 
 function UserCard({ user, onClose }) {
+  console.log(user._id)
   return (
     <Link
       to={"/home/" + user?._id}

@@ -1,10 +1,12 @@
 import { LuUser2 } from "react-icons/lu"
 import { PiUserCircle } from "react-icons/pi"
-import { useSelector } from "react-redux"
-function Avatar({ userId, name, profileImg, width, height }) {
-  const onlineUser = useSelector((state) => state?.user?.onlineUser)
+import { useSocketContext } from "../context/SocketContext"
+// import { useSelector } from "react-redux"
+function Avatar({ userId, fullName, profileImg, width, height }) {
+  const { onlineUsers } = useSocketContext()
 
-  const isOnline = onlineUser.includes(userId)
+  // const onlineUser = useSelector((state) => state?.user?.onlineUser)
+  const isOnline = onlineUsers.includes(userId)
 
   return (
     <div
@@ -15,15 +17,15 @@ function Avatar({ userId, name, profileImg, width, height }) {
         <img
           src={profileImg}
           style={{ width: width + "px", height: height + "px" }}
-          alt={name}
+          alt={fullName}
           className="overflow-hidden rounded-full flex justify-center items-center text-lg bg-blue-200"
         />
-      ) : name ? (
+      ) : fullName ? (
         <div
           style={{ width: width + "px", height: height + "px" }}
           className={`overflow-hidden rounded-full flex justify-center items-center text-lg bg-blue-200`}
         >
-          {name}
+          {fullName}
         </div>
       ) : (
         <PiUserCircle size={width} />

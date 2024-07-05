@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 const { Schema, model } = mongoose
-const { ObjectId } = Schema
+const ObjectId = Schema.ObjectId
 
 const messageSchema = new Schema(
   {

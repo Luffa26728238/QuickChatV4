@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
 import { NavLink, useNavigate } from "react-router-dom"
 import Avatar from "./Avatar"
 import EditUserDetail from "./EditUserDetail"
 import SearchBar from "./SearchBar"
-import { logout } from "../redux/userSlice"
 
 //icons
 import { HiMiniArrowUpLeft } from "react-icons/hi2"
@@ -16,37 +14,16 @@ import { RxVideo } from "react-icons/rx"
 import { useAuthContext } from "../context/AuthContext"
 
 function Sidebar() {
-  const { authUser } = useAuthContext()
-  const socketConnection = useSelector((state) => state.user.socketConnection)
+  const { authUser } = useAuthContext() //獲取登入使用者資料
 
+  const { fullName, email, profileImg, _id } = authUser
   const [allUser, setAllUser] = useState([])
   const [openSearch, setOpenSearch] = useState(false)
   const [editUserOpen, setEditUserOpen] = useState(false)
-  const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (socketConnection) {
-      socketConnection.emit("sidebar", user.userId)
-      const handleConversation = (data) => setAllUser(data)
-
-      socketConnection.on("conversation", handleConversation)
-
-      return () => {
-        socketConnection.off("conversation", handleConversation)
-      }
-    }
-  }, [socketConnection, user.userId])
-
-  //登出
-  const handleLogout = () => {
-    dispatch(logout())
-    navigate("/")
-    localStorage.clear()
-  }
-
   return (
-    <div className="w-full h-full grid grid-cols-[48px,1fr] bg-white">
+    <div className="w-full h-full grid grid-cols-[48px,1fr] bg-red-200">
       <div className="bg-slate-200 w-12 h-full rounded-tr-lg rounded-br-lg py-6 text-slate-700 flex flex-col justify-between">
         <div>
           <NavLink
@@ -73,21 +50,20 @@ function Sidebar() {
         <div className="flex flex-col items-center">
           <button
             className="cursor-pointer mx-auto"
-            title={user.name}
+            title={fullName}
             onClick={() => setEditUserOpen(true)}
           >
             <Avatar
               width={50}
               height={50}
-              profileImg={user.profileImg}
-              name={user.name}
-              userId={user.userId}
+              profileImg={profileImg}
+              name={fullName}
+              userId={_id}
             />
           </button>
           <button
             className="w-12 h-12 flex flex-col justify-center items-center cursor-pointer hover:bg-slate-300 rounded "
             title="登出"
-            onClick={handleLogout}
           >
             <SlLogout size={25} />
           </button>
@@ -166,7 +142,6 @@ function Sidebar() {
           )}
         </div>
       </div>
-
       {editUserOpen && (
         <EditUserDetail onClose={() => setEditUserOpen(false)} />
       )}

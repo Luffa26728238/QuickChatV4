@@ -7,12 +7,10 @@ import io from "socket.io-client"
 import { useAuthContext } from "../context/AuthContext"
 
 function Home() {
-  // socket.io
-
   return (
     <div className="grid lg:grid-cols-6 h-screen max-h-screen">
       <section className={`bg-white col-span-2 lg:block`}>
-        {/* <Sidebar /> */}
+        <Sidebar />
       </section>
       <section className={`col-span-4 `}></section>
 

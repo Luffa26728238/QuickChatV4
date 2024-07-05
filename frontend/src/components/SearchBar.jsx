@@ -4,42 +4,32 @@ import UserCard from "./UserCard"
 import toast from "react-hot-toast"
 import axios from "axios"
 import "../App.css"
-import { useSelector } from "react-redux"
+import userSearch from "../hooks/useSearch"
+import { useAuthContext } from "../context/AuthContext"
+import { useSocketContext } from "../context/SocketContext"
 
 // icons
 import { IoSearchOutline } from "react-icons/io5"
 import { GrClose } from "react-icons/gr"
 
 function SearchBar({ onClose }) {
-  const currentUser = useSelector((state) => state?.user)
-  const [searchUser, setSearchUser] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [search, setSearch] = useState("")
+  const { onlineUsers } = useSocketContext()
 
-  const handleSearchUser = useCallback(async () => {
-    const URL = `${import.meta.env.VITE_APP_BACKEND_API}/search-user`
-    try {
-      setLoading(true)
+  // destructor
+  const { authUser } = useAuthContext()
+  const { loading, searchUser } = userSearch() //搜尋用戶的邏輯
 
-      axios.defaults.withCredentials = true
-      const res = await axios.post(URL, {
-        search: search,
-      })
-      setSearchUser(res.data.data)
-    } catch (err) {
-      toast.error(err.response?.data?.message)
-    } finally {
-      setLoading(false)
-    }
-  }, [search])
+  const [searchedUser, setSearchedUser] = useState([])
+  const [search, setSearch] = useState("") //用戶搜尋的字
 
   useEffect(() => {
-    if (search.trim()) {
-      handleSearchUser()
+    if (search) {
+      searchUser(search, setSearchedUser)
     } else {
-      setSearchUser([])
+      console.log("沒有輸入")
+      return
     }
-  }, [search, handleSearchUser])
+  }, [search])
 
   return (
     <div className="fixed top-0 bottom-0 left-0 right-0 bg-slate-700 bg-opacity-40 p-2 z-10">
@@ -47,7 +37,7 @@ function SearchBar({ onClose }) {
         <div className="bg-white rounded h-14 overflow-hidden flex">
           <input
             type="text"
-            placeholder="透過用戶名稱 email 搜尋..."
+            placeholder="透過用戶名稱 或 email 搜尋..."
             className="w-full outline-none p-1 h-full px-4 bg-white"
             onChange={(e) => {
               setSearch(e.target.value)
@@ -66,10 +56,11 @@ function SearchBar({ onClose }) {
 
           {loading && <Loading />}
 
-          {searchUser.length !== 0 &&
+          {searchedUser.length !== 0 &&
             !loading &&
-            searchUser.map((user) => {
-              if (user._id !== currentUser.userId) {
+            searchedUser.map((user) => {
+              console.log(user)
+              if (user._id !== authUser._id) {
                 return <UserCard key={user._id} user={user} onClose={onClose} />
               }
             })}

@@ -8,7 +8,7 @@ export const useAuthContext = () => {
 
 export const AuthContextProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(
-    JSON.parse(localStorage.getItem("chat-user")) || null
+    JSON.parse(localStorage.getItem("chat-user")) || null //每個瀏覽器都會有不同的localStorage
   )
 
   return (

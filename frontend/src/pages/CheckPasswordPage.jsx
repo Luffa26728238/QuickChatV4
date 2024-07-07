@@ -3,8 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import axios from "axios"
 import toast from "react-hot-toast"
 import Avatar from "../components/Avatar"
-// import { useDispatch } from "react-redux"
-// import { setToken, setUser } from "../redux/userSlice"
+import useLogin from "../hooks/useLogin"
 
 function CheckPasswordPage() {
   const [userData, setUserData] = useState({
@@ -12,28 +11,28 @@ function CheckPasswordPage() {
     password: "",
   })
 
+  const { loading, login } = useLogin()
   const navigate = useNavigate()
   const location = useLocation() //其他地方使用用 navigate("./password",{ data: }) 後面傳遞的參數可以用location.data獲取:)
 
   console.log(location)
-  return
-  // const dispatch = useDispatch()
 
   // 把個人訊息解構出來
-  const { _id: userId, email, name, profileImg } = location.state || {}
+  const { _id, email, fullName, profileImg } = location.state || {}
 
   useEffect(() => {
-    if (!name) {
+    if (!fullName) {
       navigate("/checkEmail")
     } else {
       setUserData((prevData) => ({
         ...prevData,
-        userId,
+        userId: _id,
       }))
     }
-  }, [name, userId, navigate])
+  }, [fullName, _id, navigate])
 
   const handleChange = (e) => {
+    // 每當輸入密碼
     const { name, value } = e.target
     setUserData((prevData) => ({
       ...prevData,
@@ -43,19 +42,18 @@ function CheckPasswordPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const URL = `${import.meta.env.VITE_APP_BACKEND_API}/password`
     try {
-      axios.defaults.withCredentials = true
+      console.log(userData)
+      login(userData)
+      // axios.defaults.withCredentials = true
 
-      const res = await axios.post(URL, userData)
+      // const res = await axios.post(URL, userData)
 
-      const { email, message, success, token } = res.data
+      // const { email, message, success, token } = res.data
 
-      toast.success(message)
-
+      // toast.success(message)
+      return
       if (success) {
-        dispatch(setToken(token))
-        localStorage.setItem("token", token)
         setUserData({
           password: "",
           userId: "", // 重置userId
@@ -64,7 +62,8 @@ function CheckPasswordPage() {
         navigate("/home")
       }
     } catch (err) {
-      toast.error(err.response.data.message)
+      console.log(err)
+      // toast.error(err.response.data.message)
     }
   }
 

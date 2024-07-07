@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom"
 import Avatar from "./Avatar"
 import EditUserDetail from "./EditUserDetail"
 import SearchBar from "./SearchBar"
+import useLogout from "../hooks/useLogout"
 
 //icons
 import { HiMiniArrowUpLeft } from "react-icons/hi2"
@@ -20,7 +21,12 @@ function Sidebar() {
   const [allUser, setAllUser] = useState([])
   const [openSearch, setOpenSearch] = useState(false)
   const [editUserOpen, setEditUserOpen] = useState(false)
-  const navigate = useNavigate()
+
+  const { loading, logout } = useLogout()
+
+  const handleClick = () => {
+    logout()
+  }
 
   return (
     <div className="w-full h-full grid grid-cols-[48px,1fr] bg-red-200">
@@ -64,6 +70,7 @@ function Sidebar() {
           <button
             className="w-12 h-12 flex flex-col justify-center items-center cursor-pointer hover:bg-slate-300 rounded "
             title="登出"
+            onClick={handleClick}
           >
             <SlLogout size={25} />
           </button>

@@ -5,8 +5,9 @@ const logout = async (req, res) => {
       secure: true,
     }
 
-    return res.cookie("token", "", cookieOption).status(200).json({
-      message: "session out",
+    res.cookie("jwt", "", cookieOption).status(200).json({
+      //將名為jwt的cookie值設為""
+      message: "用戶成功登出!",
       success: true,
     })
   } catch (err) {

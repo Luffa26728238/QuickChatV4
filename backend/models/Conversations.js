@@ -1,7 +1,6 @@
 import mongoose from "mongoose"
 
 const { Schema, model } = mongoose
-const ObjectId = Schema.ObjectId
 
 const messageSchema = new Schema(
   {
@@ -21,10 +20,15 @@ const messageSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    sender: {
-      type: ObjectId,
-      required: true,
+    senderId: {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
+      required: true,
+    },
+    receiverId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
+      required: true,
     },
   },
   { timestamps: true }
@@ -32,19 +36,11 @@ const messageSchema = new Schema(
 
 const conversationSchema = new Schema(
   {
-    sender: {
-      type: ObjectId,
-      required: true,
-      ref: "Users",
-    },
-    receiver: {
-      type: ObjectId,
-      required: true,
-      ref: "Users",
-    },
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }],
+
     messages: [
       {
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Messages",
       },
     ],

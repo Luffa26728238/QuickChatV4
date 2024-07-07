@@ -4,6 +4,7 @@ import Home from "./pages/Home"
 import Register from "./pages/Register"
 import CheckEmailPage from "./pages/CheckEmailPage"
 import CheckPasswordPage from "./pages/CheckPasswordPage"
+import MessagePage from "./components/MessagePage"
 import Intro from "./pages/Intro"
 import { useAuthContext } from "./context/AuthContext"
 
@@ -16,7 +17,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Intro />} />
 
-        <Route path="/home" element={<Home />} />
+        <Route
+          path="/home"
+          element={!authUser ? <Navigate to="/checkEmail" /> : <Home />}
+        />
+        <Route
+          path="/home/:id"
+          element={!authUser ? <Navigate to="/checkEmail" /> : <MessagePage />}
+        />
         <Route
           path="/register"
           element={authUser ? <Navigate to="/home" /> : <Register />}

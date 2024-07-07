@@ -28,7 +28,6 @@ function CheckEmailPage() {
         setData({
           email: "",
         })
-        console.log(res)
         navigate("/password", {
           state: res.data.data,
         })

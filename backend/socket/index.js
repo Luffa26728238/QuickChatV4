@@ -44,7 +44,6 @@ io.on("connection", async (socket) => {
 // const user = await getToken(token)
 // if (!user) {
 //   socket.disconnect()
-//   return
 // }
 
 // 創建聊天室

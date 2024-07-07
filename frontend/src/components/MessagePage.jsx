@@ -1,10 +1,12 @@
 import { useEffect, useState, useRef } from "react"
-import { useSelector } from "react-redux"
-import { Link, NavLink, useParams } from "react-router-dom"
+import { Link, NavLink, useLocation, useParams } from "react-router-dom"
 import Avatar from "./Avatar"
 import moment from "moment"
 import EmojiPicker from "emoji-picker-react"
 import { HiOutlineEmojiHappy } from "react-icons/hi"
+import { useSocketContext } from "../context/SocketContext"
+import { useAuthContext } from "../context/AuthContext"
+import useSendMessage from "../hooks/useSendMessage"
 
 // icons
 import { BsThreeDotsVertical } from "react-icons/bs"
@@ -17,10 +19,14 @@ import { IoMdSend } from "react-icons/io"
 import uploadFile from "../helpers/uploadFile"
 
 function MessagePage() {
+  const { authUser } = useAuthContext()
   const params = useParams()
+  const { socket, onlineUsers } = useSocketContext()
 
-  const socketConnection = useSelector((state) => state.user.socketConnection)
-  const user = useSelector((state) => state.user)
+  const { sendMessage } = useSendMessage()
+  const location = useLocation()
+
+  const user = location.state
   const [userData, setUserData] = useState({
     _id: "",
     name: "",
@@ -47,6 +53,9 @@ function MessagePage() {
   const imageInputRef = useRef(null)
   const videoInputRef = useRef(null)
   const messagesEndRef = useRef(null)
+
+  //檢查選取的用戶是否在線上
+  const isOnline = onlineUsers.includes(user._id)
 
   const handleUploadOpen = () => {
     setOpenUpload((prev) => !prev)
@@ -122,19 +131,23 @@ function MessagePage() {
 
   console.log(file)
   const handleSubmit = async (e) => {
+    console.log(123)
+
     e.preventDefault()
     const uploadedImgUrl = await uploadFile(file?.img)
     const uploadedVideoUrl = await uploadFile(file?.video)
 
-    if (socketConnection) {
-      socketConnection.emit("new message", {
-        sender: user.userId,
-        receiver: params.userId,
-        text: message.text,
-        imageUrl: uploadedImgUrl?.url,
-        videoUrl: uploadedVideoUrl?.url,
-      })
-    }
+    // if (socket) {
+    //   socket.emit("new message", {
+    //     sender: aut,
+    //     receiver: params.userId,
+    //     text: message.text,
+    //     imageUrl: uploadedImgUrl?.url,
+    //     videoUrl: uploadedVideoUrl?.url,
+    //   })
+    // }
+    sendMessage(message, params.id)
+    return
     setMessage({
       text: "",
       imageUrl: "",
@@ -176,26 +189,26 @@ function MessagePage() {
   }
 
   useEffect(() => {
-    if (socketConnection) {
+    if (socket) {
       setAllMessages([])
       console.log(params.userId)
-      socketConnection.emit("message-page", params.userId, user.userId)
+      socket.emit("message-page", params.userId, user.userId)
 
-      socketConnection.emit("isSeen", params.userId)
+      socket.emit("isSeen", params.userId)
 
       //正在聊天的對象
-      socketConnection.on("message-user", (data) => {
+      socket.on("message-user", (data) => {
         setUserData(data)
       })
       console.log("聊天天訊息")
 
-      socketConnection.on("message", (data) => {
+      socket.on("message", (data) => {
         console.log("聊天天訊息")
         console.log(data)
         setAllMessages(data)
       })
     }
-  }, [socketConnection, params.userId, user])
+  }, [params.userId])
 
   useEffect(() => {
     scrollToBottom()
@@ -232,9 +245,9 @@ function MessagePage() {
           />
           <div>
             <h3 className="font-semibold text-lg my-0 text-ellipsis line-clamp-1">
-              {userData?.name}
+              {user.fullName}
             </h3>
-            <p className="-my-2 text-sm">{userData.online ? "線上" : "離線"}</p>
+            <p className="-my-2 text-sm">{isOnline ? "線上" : "離線"}</p>
           </div>
         </div>
 

@@ -5,8 +5,11 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import Sidebar from "../components/Sidebar"
 import io from "socket.io-client"
 import { useAuthContext } from "../context/AuthContext"
+import { useSocketContext } from "../context/SocketContext"
 
 function Home() {
+  const { socket } = useSocketContext()
+
   return (
     <div className="grid lg:grid-cols-6 h-screen max-h-screen">
       <section className={`bg-white col-span-2 lg:block`}>

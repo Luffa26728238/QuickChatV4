@@ -1,6 +1,7 @@
 import Users from "../models/Users.js"
 import bcryptjs from "bcryptjs"
 import jwt from "jsonwebtoken"
+import generateTokenAndSetCookie from "../helper/generateToken.js"
 
 const checkPassword = async (req, res) => {
   try {
@@ -15,22 +16,10 @@ const checkPassword = async (req, res) => {
         error: true,
       })
     }
-    const tokenData = {
-      id: user._id,
-      email: user.email,
-    }
-    const token = await jwt.sign(tokenData, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    })
+    generateTokenAndSetCookie(user._id, res)
 
-    const cookieOption = {
-      http: true,
-      secure: true,
-    }
-
-    return res.cookie("token", token, cookieOption).status(200).json({
+    res.status(200).json({
       message: "用戶成功登入",
-      token: token,
       success: true,
       data: user,
     })

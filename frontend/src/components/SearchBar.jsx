@@ -59,7 +59,6 @@ function SearchBar({ onClose }) {
           {searchedUser.length !== 0 &&
             !loading &&
             searchedUser.map((user) => {
-              console.log(user)
               if (user._id !== authUser._id) {
                 return <UserCard key={user._id} user={user} onClose={onClose} />
               }

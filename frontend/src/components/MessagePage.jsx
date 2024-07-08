@@ -17,16 +17,29 @@ import { MdOndemandVideo } from "react-icons/md"
 import { IoCloseOutline } from "react-icons/io5"
 import { IoMdSend } from "react-icons/io"
 import uploadFile from "../helpers/uploadFile"
+import useGetMessages from "../hooks/useGetMessages"
+import useGetUser from "../hooks/useGetUser"
+import axios from "axios"
 
 function MessagePage() {
   const { authUser } = useAuthContext()
-  const params = useParams()
-  const { socket, onlineUsers } = useSocketContext()
 
-  const { sendMessage } = useSendMessage()
-  const location = useLocation()
+  const params = useParams() //正在聊天對象的id  ---------  home/:id
 
-  const user = location.state
+  const { socket, onlineUsers } = useSocketContext() //取得正在線上的用戶
+
+  const { loading, getMessages } = useGetMessages() //取聊天對象的所有訊息
+
+  const { sendMessage } = useSendMessage() //傳送訊息
+
+  const receiverId = params.id
+
+  useEffect(() => {
+    const fetchReceiver = () => {
+      const res = axios.get(`${import.meta.env.VITE_APP_BACKEND_API}/`)
+    }
+  }, [])
+
   const [userData, setUserData] = useState({
     _id: "",
     name: "",
@@ -40,7 +53,6 @@ function MessagePage() {
     video: null,
   })
   const [openUpload, setOpenUpload] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [allMessages, setAllMessages] = useState([])
   const [message, setMessage] = useState({
     text: "",
@@ -55,7 +67,7 @@ function MessagePage() {
   const messagesEndRef = useRef(null)
 
   //檢查選取的用戶是否在線上
-  const isOnline = onlineUsers.includes(user._id)
+  const isOnline = onlineUsers.includes(receiverId)
 
   const handleUploadOpen = () => {
     setOpenUpload((prev) => !prev)
@@ -129,7 +141,6 @@ function MessagePage() {
     reader.readAsDataURL(file)
   }
 
-  console.log(file)
   const handleSubmit = async (e) => {
     console.log(123)
 
@@ -147,7 +158,6 @@ function MessagePage() {
     //   })
     // }
     sendMessage(message, params.id)
-    return
     setMessage({
       text: "",
       imageUrl: "",
@@ -188,27 +198,29 @@ function MessagePage() {
     }
   }
 
-  useEffect(() => {
-    if (socket) {
-      setAllMessages([])
-      console.log(params.userId)
-      socket.emit("message-page", params.userId, user.userId)
+  // useEffect(() => {
+  //   if (socket) {
+  //     const messages = getMessages(params.id)
 
-      socket.emit("isSeen", params.userId)
+  //     console.log(messages)
 
-      //正在聊天的對象
-      socket.on("message-user", (data) => {
-        setUserData(data)
-      })
-      console.log("聊天天訊息")
+  //     setAllMessages([])
+  //     // socket.emit("message-page", params.userId, user.userId)
 
-      socket.on("message", (data) => {
-        console.log("聊天天訊息")
-        console.log(data)
-        setAllMessages(data)
-      })
-    }
-  }, [params.userId])
+  //     // socket.emit("isSeen", params.userId)
+
+  //     // //正在聊天的對象
+  //     // socket.on("message-user", (data) => {
+  //     //   setUserData(data)
+  //     // })
+  //     // console.log("聊天天訊息")
+
+  //     // socket.on("message", (data) => {
+  //     //   console.log(data)
+  //     //   setAllMessages(data)
+  //     // })
+  //   }
+  // }, [params.id])
 
   useEffect(() => {
     scrollToBottom()

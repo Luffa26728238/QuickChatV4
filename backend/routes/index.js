@@ -8,6 +8,8 @@ import updateUser from "../controller/updateUer.js"
 import searchUser from "../controller/searchUser.js"
 import sendMessage from "../controller/sendMessage.js"
 import protectRoute from "../middleware/protectRoute.js"
+import getMessages from "../controller/getMessage.js"
+import getConversations from "../controller/getConversations.js"
 
 const router = express.Router()
 
@@ -32,10 +34,11 @@ router.post("/logout", logout)
 //搜尋其他用戶
 router.post("/search-user", searchUser)
 
+//獲取聊天對象
+router.get("/conversations", protectRoute, getConversations)
+
 //獲取聊天信息
-router.get("/:id", (req, res) => {
-  res.send("chat")
-})
+router.get("/:id", protectRoute, getMessages)
 
 router.post("/send/:id", protectRoute, sendMessage)
 

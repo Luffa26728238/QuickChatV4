@@ -1,9 +1,11 @@
-import { Conversations } from "../models/Conversations"
+import { Conversations } from "../models/Conversations.js"
 
 const getMessages = async (req, res) => {
   try {
     const { id: userToChatId } = req.params
     const senderId = req.user._id
+
+    return
 
     const conversation = await Conversations.findOne({
       participants: { $all: [senderId, userToChatId] },

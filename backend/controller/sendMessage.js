@@ -17,10 +17,11 @@ const sendMessage = async (req, res) => {
     }
 
     const newMessage = new Messages({
+      ...message,
       senderId,
       receiverId,
-      message,
     })
+
     if (newMessage) {
       conversation.messages.push(newMessage._id)
     }

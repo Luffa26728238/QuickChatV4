@@ -13,7 +13,6 @@ const useSendMessage = () => {
 
         { withCredentials: true }
       )
-      console.log(res)
       const data = res.data.data
     } catch (err) {
       console.log(err)

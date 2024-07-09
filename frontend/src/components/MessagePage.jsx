@@ -7,6 +7,7 @@ import { HiOutlineEmojiHappy } from "react-icons/hi"
 import { useSocketContext } from "../context/SocketContext"
 import { useAuthContext } from "../context/AuthContext"
 import useSendMessage from "../hooks/useSendMessage"
+import useGetConversations from "../hooks/useGetConversation"
 
 // icons
 import { BsThreeDotsVertical } from "react-icons/bs"
@@ -18,27 +19,29 @@ import { IoCloseOutline } from "react-icons/io5"
 import { IoMdSend } from "react-icons/io"
 import uploadFile from "../helpers/uploadFile"
 import useGetMessages from "../hooks/useGetMessages"
-import useGetUser from "../hooks/useGetUser"
+import useConversation from "../zustand/useConversation"
+// import useGetUser from "../hooks/useGetUser"
 import axios from "axios"
 
 function MessagePage() {
+  console.log(123)
   const { authUser } = useAuthContext()
 
   const params = useParams() //正在聊天對象的id  ---------  home/:id
 
   const { socket, onlineUsers } = useSocketContext() //取得正在線上的用戶
 
-  const { loading, getMessages } = useGetMessages() //取聊天對象的所有訊息
+  const { loading, messages } = useGetMessages() //取聊天對象的所有訊息
 
   const { sendMessage } = useSendMessage() //傳送訊息
 
+  const { chatUser, findChatUserById } = useConversation()
+
   const receiverId = params.id
 
-  useEffect(() => {
-    const fetchReceiver = () => {
-      const res = axios.get(`${import.meta.env.VITE_APP_BACKEND_API}/`)
-    }
-  }, [])
+  const receiver = findChatUserById(receiverId)
+
+  console.log(chatUser)
 
   const [userData, setUserData] = useState({
     _id: "",
@@ -112,8 +115,7 @@ function MessagePage() {
     reader.readAsDataURL(file)
   }
 
-  console.log(`messages!!!!${message.text}`)
-
+  console.log(messages)
   const handleUploadVideo = (e) => {
     handleClearImage()
     setOpenUpload(false)
@@ -257,7 +259,7 @@ function MessagePage() {
           />
           <div>
             <h3 className="font-semibold text-lg my-0 text-ellipsis line-clamp-1">
-              {user.fullName}
+              {receiver.fullName}
             </h3>
             <p className="-my-2 text-sm">{isOnline ? "線上" : "離線"}</p>
           </div>
@@ -312,11 +314,11 @@ function MessagePage() {
         )}
         {/* 顯示所有訊息 */}
         <div className="flex flex-col gap-2">
-          {allMessages.map((message, index) => {
+          {messages.map((message, index) => {
             return (
               <nav
                 className={`bg-white p-1 py-1 rounded w-fit ${
-                  user.userId == message.sender ? "ml-auto bg-teal-200" : ""
+                  authUser._id === message.senderId ? "ml-auto bg-teal-400" : ""
                 }`}
                 key={index}
               >

@@ -4,6 +4,8 @@ import Avatar from "./Avatar"
 import EditUserDetail from "./EditUserDetail"
 import SearchBar from "./SearchBar"
 import useLogout from "../hooks/useLogout"
+import useConversation from "../zustand/useConversation"
+import useGetConversations from "../hooks/useGetConversation"
 
 //icons
 import { HiMiniArrowUpLeft } from "react-icons/hi2"
@@ -13,19 +15,16 @@ import { SlLogout } from "react-icons/sl"
 import { BsImage } from "react-icons/bs"
 import { RxVideo } from "react-icons/rx"
 import { useAuthContext } from "../context/AuthContext"
-import useGetConversations from "../hooks/useGetConversation"
 
 function Sidebar() {
   const { authUser } = useAuthContext() //獲取登入使用者資料
   const { conversations } = useGetConversations()
+  const { chatUser } = useConversation()
   const { fullName, email, profileImg, _id } = authUser
-  const [allUser, setAllUser] = useState([])
   const [openSearch, setOpenSearch] = useState(false)
   const [editUserOpen, setEditUserOpen] = useState(false)
 
-  console.log(conversations)
   const { loading, logout } = useLogout()
-
   const handleClick = () => {
     logout()
   }

@@ -43,7 +43,6 @@ function CheckPasswordPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      console.log(userData)
       login(userData)
       // axios.defaults.withCredentials = true
 

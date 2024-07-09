@@ -20,11 +20,10 @@ function App() {
         <Route
           path="/home"
           element={!authUser ? <Navigate to="/checkEmail" /> : <Home />}
-        />
-        <Route
-          path="/home/:id"
-          element={!authUser ? <Navigate to="/checkEmail" /> : <MessagePage />}
-        />
+        >
+          <Route path=":id" element={<MessagePage />} />
+        </Route>
+
         <Route
           path="/register"
           element={authUser ? <Navigate to="/home" /> : <Register />}

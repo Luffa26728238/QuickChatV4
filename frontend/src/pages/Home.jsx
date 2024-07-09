@@ -6,6 +6,7 @@ import Sidebar from "../components/Sidebar"
 import io from "socket.io-client"
 import { useAuthContext } from "../context/AuthContext"
 import { useSocketContext } from "../context/SocketContext"
+import MessagePage from "../components/MessagePage"
 
 function Home() {
   const { socket } = useSocketContext()

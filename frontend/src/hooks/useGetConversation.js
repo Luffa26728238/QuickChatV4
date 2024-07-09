@@ -1,10 +1,12 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
+import useConversation from "../zustand/useConversation"
 
 const useGetConversations = () => {
   const [loading, setLoading] = useState(false)
   const [conversations, setConversations] = useState([])
+  const { chatUser, setChatUser } = useConversation() //全局狀態 zustand
 
   useEffect(() => {
     const getConversations = async () => {
@@ -16,6 +18,8 @@ const useGetConversations = () => {
             withCredentials: true,
           }
         )
+
+        setChatUser(res.data)
 
         setConversations(res.data)
       } catch (error) {

@@ -1,19 +1,22 @@
 import express from "express"
-import { Server } from "socket.io"
 import http from "http"
 import getToken from "../helper/getToken.js"
+
+//socket.io
+import { Server } from "socket.io"
+
 //models
 import Users from "../models/Users.js"
 import { Conversations, Messages } from "../models/Conversations.js"
 import { getConversation } from "../helper/getConversation.js"
 
 export const app = express()
-
 export const server = http.createServer(app)
 
-// 正在線上的用戶
+// 正在線上的用戶  Set只會儲存唯一值
 const onlineUser = new Set()
 
+//創建一socket server實例
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173",
@@ -39,6 +42,7 @@ io.on("connection", async (socket) => {
   io.emit("onlineUser", Array.from(onlineUser))
 
   socket.on("message-page", async (userId, sender) => {
+    console.log("進入message-page")
     console.log("UserId:", userId)
     console.log("Sender:", sender)
 
@@ -142,6 +146,7 @@ io.on("connection", async (socket) => {
 
   // sidebar
   socket.on("sidebar", async (currentUserId) => {
+    console.log(123)
     const conversation = await getConversation(currentUserId)
     socket.emit("conversation", conversation)
   })

@@ -13,6 +13,7 @@ import { FiUserPlus } from "react-icons/fi"
 import { SlLogout } from "react-icons/sl"
 import { BsImage } from "react-icons/bs"
 import { RxVideo } from "react-icons/rx"
+import axios from "axios"
 
 function Sidebar() {
   const user = useSelector((state) => state?.user)
@@ -23,11 +24,15 @@ function Sidebar() {
   const [editUserOpen, setEditUserOpen] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
   useEffect(() => {
+    console.log(socketConnection)
+    console.log(123)
     if (socketConnection) {
       socketConnection.emit("sidebar", user.userId)
-      const handleConversation = (data) => setAllUser(data)
+      const handleConversation = (data) => {
+        console.log(data)
+        setAllUser(data)
+      }
 
       socketConnection.on("conversation", handleConversation)
 
@@ -38,7 +43,11 @@ function Sidebar() {
   }, [socketConnection, user.userId])
 
   //登出
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const res = await axios.post(
+      `${import.meta.env.VITE_APP_BACKEND_API}/logout`
+    )
+    console.log(res)
     dispatch(logout())
     navigate("/")
     localStorage.clear()

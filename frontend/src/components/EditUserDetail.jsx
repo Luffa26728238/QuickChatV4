@@ -51,7 +51,6 @@ function EditUserDetail({ onClose }) {
     }
     reader.readAsDataURL(file)
   }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -62,16 +61,19 @@ function EditUserDetail({ onClose }) {
         uploadPhotoUrl = uploadPhoto.url
       }
 
-      const updatedData = { ...data, profileImg: uploadPhotoUrl }
+      // 创建一个没有循环引用的新对象
+      const updatedData = {
+        name: data.name,
+        profileImg: uploadPhotoUrl,
+      }
+
       const URL = `${import.meta.env.VITE_APP_BACKEND_API}/update-user`
 
       axios.defaults.withCredentials = true
       const res = await axios.post(URL, updatedData)
-      console.log(res.data)
 
       if (res.status === 200) {
         dispatch(setUser(res.data.data))
-
         toast.success("User updated successfully")
         onClose()
       } else {
@@ -82,7 +84,6 @@ function EditUserDetail({ onClose }) {
         ? err.response.data.message
         : err.message
       toast.error(errorMessage)
-      console.error(err)
     }
   }
 

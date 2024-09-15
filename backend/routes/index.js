@@ -18,7 +18,7 @@ router.post("/email", checkEmail)
 //檢查密碼
 router.post("/password", checkPassword)
 
-//獲取用戶信息
+//獲取登入用戶信息
 router.get("/user-detail", userDetail)
 export default router
 
@@ -26,7 +26,7 @@ export default router
 router.post("/update-user", updateUser)
 
 //登出
-router.get("/logout", logout)
+router.post("/logout", logout)
 
 //搜尋其他用戶
 router.post("/search-user", searchUser)

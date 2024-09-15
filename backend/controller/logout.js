@@ -1,18 +1,20 @@
 const logout = async (req, res) => {
   try {
     const cookieOption = {
-      http: true,
-      secure: true,
+      httpOnly: true,
+      sameSite: "strict",
+      expires: new Date(0),
+      path: "/",
     }
 
-    return res.cookie("token", "", cookieOption).status(200).json({
-      message: "session out",
+    return res.clearCookie("token", cookieOption).status(200).json({
+      message: "Logged out successfully",
       success: true,
     })
   } catch (err) {
     res.status(500).json({
-      message: err.message || err,
-      error: false,
+      message: err.message || "An error occurred during logout",
+      success: false,
     })
   }
 }

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
+import axios from "axios"
 
 const initialState = {
   userId: "",
@@ -15,7 +16,6 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      console.log(action.payload)
       const { _id, name, email, profileImg } = action.payload
       state.userId = _id
       state.name = name
@@ -34,7 +34,6 @@ export const userSlice = createSlice({
       state.onlineUser = action.payload
     },
     setSocketConnection: (state, action) => {
-      console.log(action.payload, "123213")
       state.socketConnection = action.payload
     },
   },

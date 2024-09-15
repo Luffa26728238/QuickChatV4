@@ -2,6 +2,7 @@ import getToken from "../helper/getToken.js"
 import Users from "../models/Users.js"
 
 const updateUser = async (req, res) => {
+  console.log("updateUser")
   try {
     const token = req.cookies.token || ""
 
@@ -15,7 +16,6 @@ const updateUser = async (req, res) => {
         profileImg,
       }
     )
-
     const userInfo = await Users.findById(user._id).select("-password")
 
     return res.status(200).json({

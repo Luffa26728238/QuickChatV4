@@ -19,7 +19,9 @@ import uploadFile from "../helpers/uploadFile"
 function MessagePage() {
   const params = useParams()
 
+  //從redux獲得socket connection
   const socketConnection = useSelector((state) => state.user.socketConnection)
+  //從redux獲得登入使用者
   const user = useSelector((state) => state.user)
   const [userData, setUserData] = useState({
     _id: "",
@@ -37,13 +39,13 @@ function MessagePage() {
   const [loading, setLoading] = useState(false)
   const [allMessages, setAllMessages] = useState([])
   const [message, setMessage] = useState({
-    text: "",
-    imageUrl: "",
-    videoUrl: "",
+    text: null,
+    imageUrl: null,
+    videoUrl: null,
   })
   //Emojis
-  const [openEmoji, setOpenEmoji] = useState(false)
 
+  const [openEmoji, setOpenEmoji] = useState(false)
   const imageInputRef = useRef(null)
   const videoInputRef = useRef(null)
   const messagesEndRef = useRef(null)
@@ -88,10 +90,9 @@ function MessagePage() {
         }
       })
     }
+    //將檔案轉為base64
     reader.readAsDataURL(file)
   }
-
-  console.log(`messages!!!!${message.text}`)
 
   const handleUploadVideo = (e) => {
     handleClearImage()
@@ -120,7 +121,6 @@ function MessagePage() {
     reader.readAsDataURL(file)
   }
 
-  console.log(file)
   const handleSubmit = async (e) => {
     e.preventDefault()
     const uploadedImgUrl = await uploadFile(file?.img)
@@ -215,7 +215,6 @@ function MessagePage() {
       return !prev
     })
   }
-
   return (
     <div className="">
       <header className="sticky top-0 h-16 bg-white flex justify-between items-center px-4">
@@ -432,7 +431,10 @@ function MessagePage() {
               />
             </div>
 
-            <button className="col-span-1 hover:text-blue-700 flex-shrink-0">
+            <button
+              className="col-span-1 hover:text-blue-700 flex-shrink-0"
+              disabled={message.text ? false : true}
+            >
               <IoMdSend size={30} />
             </button>
           </div>

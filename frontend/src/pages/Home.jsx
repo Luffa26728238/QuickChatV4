@@ -10,8 +10,10 @@ import {
 } from "../redux/userSlice"
 import Sidebar from "../components/Sidebar"
 import io from "socket.io-client"
+import toast from "react-hot-toast"
 
 function Home() {
+  // 取得到user數據
   const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -25,12 +27,29 @@ function Home() {
 
       const res = await axios.get(URL)
 
+      //將使用者資料儲存在Redux
       dispatch(setUser(res.data.data))
-      // console.log(user)
 
-      if (res.data.logout) {
-        // dispatch(logout())
+      if (res.data.data.logout) {
+        toast.error("請先登入!")
         navigate("/")
+      } else {
+        const socketConnection = io(import.meta.env.VITE_APP_BACKEND, {
+          auth: {
+            token: localStorage.getItem("token"),
+          },
+        })
+
+        //聆聽後端事件
+        socketConnection.on("onlineUser", (data) => {
+          dispatch(setOnlineUser(data))
+        })
+
+        dispatch(setSocketConnection(socketConnection))
+
+        return () => {
+          socketConnection.disconnect()
+        }
       }
     } catch (err) {
       console.error(`error:${err}`)
@@ -41,24 +60,8 @@ function Home() {
     fetchUserDetails()
   }, [])
 
-  // socket.io
-
   useEffect(() => {
-    const socketConnection = io(import.meta.env.VITE_APP_BACKEND, {
-      auth: {
-        token: localStorage.getItem("token"),
-      },
-    })
-
-    socketConnection.on("onlineUser", (data) => {
-      dispatch(setOnlineUser(data))
-    })
-
-    dispatch(setSocketConnection(socketConnection))
-
-    return () => {
-      socketConnection.disconnect()
-    }
+    // 建立socket連線
   }, [])
 
   const basePath = location.pathname === "/home"
